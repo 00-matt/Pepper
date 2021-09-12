@@ -1,0 +1,46 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "warnings": {
+                "dev": true,
+                "deprecated": true,
+                "uninitialized": false,
+                "unusedCli": true,
+                "systemVars": true
+            }
+        },
+        {
+            "name": "default-amd64",
+            "inherits": "default",
+            "hidden": true,
+            "toolchainFile": "${sourceDir}/cmake/toolchain-x86_64-pc-none-clang.cmake"
+        },
+        {
+            "name": "debug-amd64",
+            "inherits": "default-amd64",
+            "displayName": "Debug (AMD64)",
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": {
+                    "type": "STRING",
+                    "value": "-O0 -ggdb"
+                }
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug-amd64",
+            "configurePreset": "debug-amd64"
+        }
+    ]
+}

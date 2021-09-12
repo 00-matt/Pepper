@@ -1,0 +1,10 @@
+set(CMAKE_CROSSCOMPILING TRUE)
+
+find_program(CMAKE_AR llvm-ar)
+find_program(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld")
+
+set(CMAKE_ASM_NASM_OBJECT_FORMAT elf64)
+
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEMPROCESSOR x86)
