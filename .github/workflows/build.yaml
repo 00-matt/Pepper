@@ -1,0 +1,49 @@
+---
+name: Build
+on: [ push ]
+jobs:
+  all:
+    name: Build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - preset: debug-amd64
+            clang-version: 12
+          - preset: debug-amd64
+            clang-version: 13
+    steps:
+      - name: Add Kitware repository
+        run: |
+          deb https://apt.kitware.com/ubuntu/ focal main |
+            sudo tee /etc/apt/sources.list.d/kitware.list
+          wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc |
+            sudo apt-key add -
+      - name: Add LLVM ${{ matrix.clang-version }} repository
+        run: |
+          echo deb http://apt.llvm.org/focal/ llvm-toolchain-focal-${{ matrix.clang-version }} main |
+            sudo tee /etc/apt/sources.list.d/llvm.list
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key |
+            sudo apt-key add -
+      - name: Install dependencies
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang-${{ matrix.clang-version }} \
+            cmake \
+            lld-${{ matrix.clang-version }} \
+            mtools \
+            nasm \
+            ninja-build
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Configure Pepper
+        run: cmake --preset ${{ matrix.preset }}
+      - name: Build Pepper
+        run: cmake --build --preset ${{ matrix.preset }} --target image --verbose
+      - name: Upload system image
+        uses: actions/upload-artifact@v2
+        with:
+          name: Filesystem (${{ matrix.preset }}, Clang ${{ matrix.clang-version }})
+          path: build/${{ matrix.preset }}/pepper.img
