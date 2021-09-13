@@ -9,11 +9,13 @@ set(CMAKE_INSTALL_PREFIX sysroot)
 string(APPEND CMAKE_CXX_FLAGS " \
 -Werror \
 -Weverything \
+-Wno-c++20-compat \
 -Wno-c++98-compat \
 -Wno-c++98-compat-pedantic \
 -Wno-missing-prototypes")
 
 add_subdirectory(boot)
+add_subdirectory(nstd)
 add_subdirectory(kernel)
 
 find_program(MCOPY_EXECUTABLE mcopy)

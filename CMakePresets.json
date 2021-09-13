@@ -30,6 +30,10 @@
             "inherits": "default-amd64",
             "displayName": "Debug (AMD64)",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": {
+                    "type": "STRING",
+                    "value": "Debug"
+                },
                 "CMAKE_CXX_FLAGS": {
                     "type": "STRING",
                     "value": "-O0 -ggdb"
