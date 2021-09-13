@@ -44,11 +44,18 @@ if(QEMU_EXECUTABLE)
       set(QEMU_KVM_ENABLED OFF CACHE BOOL "")
     endif()
   endif()
+
+  find_file(OVMF_FILE
+    NAMES OVMF.fd OVMF_CODE.fd
+    PATHS /usr/share/ovmf /usr/share/edk2-ovmf)
+  if (NOT OVMF_FILE)
+    message(FATAL_ERROR "Failed to find OVMF")
+  endif()
   
   add_custom_target(run
     COMMAND
     "${QEMU_EXECUTABLE}"
-    -bios /home/matt/Repos/umbongo/OVMF.fd
+    -bios "${OVMF_FILE}"
     $<$<BOOL:${QEMU_KVM_ENABLED}>:-enable-kvm>
     -cpu max
     -machine q35
